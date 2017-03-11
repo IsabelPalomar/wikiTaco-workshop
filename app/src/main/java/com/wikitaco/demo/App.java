@@ -4,7 +4,6 @@ import android.app.Application;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.appcompat.*;
 import android.support.v7.widget.GridLayoutManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,11 +19,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-/**
- * Created by isabelpalomar on 3/11/17.
- */
-
-public class App extends Application {
+public class App extends Application{
     private FirebaseAuth firebaseAuth;
     private FirebaseAnalytics firebaseAnalytics;
     private FirebaseRemoteConfig firebaseRemoteConfig;
@@ -165,5 +160,4 @@ public class App extends Application {
     public void logEvent(String event, Bundle eventInfo) {
         firebaseAnalytics.logEvent(event, eventInfo);
     }
-
 }
