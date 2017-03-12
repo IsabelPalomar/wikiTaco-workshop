@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +28,8 @@ public class TacosListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private App app;
+    private RecyclerView rvTacos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,14 @@ public class TacosListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //recycler view
+        rvTacos = (RecyclerView) findViewById(R.id.rvTacos);
+        rvTacos.setLayoutManager((new LinearLayoutManager(this)));
+
+        TacoRecyclerAdapter adapter = new TacoRecyclerAdapter(getApplicationContext(),
+                app.getTacoListReference());
+        rvTacos.setAdapter(adapter);
     }
 
     @Override
