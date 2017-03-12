@@ -8,8 +8,12 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.StorageReference;
+import com.wikitaco.demo.App;
 import com.wikitaco.demo.R;
 import com.wikitaco.demo.models.Taco;
 
@@ -28,6 +32,22 @@ public class TacoRecyclerAdapter extends FirebaseRecyclerAdapter <Taco, TacoRecy
     protected void populateViewHolder(TacoViewHolder viewHolder, Taco model, int position) {
         viewHolder.tvTacoName.setText(model.getName());
         viewHolder.rbTacoRating.setRating(model.getRating());
+
+        if (model.getId() == null) {
+            model.setId(getRef(position).getKey());
+        }
+
+        StorageReference storageReference =
+                ((App)context.getApplicationContext())
+                        .getTacoStorageReference(model.getId());
+
+        Glide.with(context)
+                .using(new FirebaseImageLoader())
+                .load(storageReference)
+                .centerCrop()
+                .crossFade()
+                .into(viewHolder.ivTacoImg);
+
     }
 
     public static class TacoViewHolder extends RecyclerView.ViewHolder {
