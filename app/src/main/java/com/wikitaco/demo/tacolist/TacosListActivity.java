@@ -1,6 +1,7 @@
 package com.wikitaco.demo.tacolist;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -16,7 +17,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -59,6 +63,8 @@ public class TacosListActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        setProfileInformation();
+
         //recycler view
         rvTacos = (RecyclerView) findViewById(R.id.rvTacos);
         rvTacos.setLayoutManager((new LinearLayoutManager(this)));
@@ -66,6 +72,36 @@ public class TacosListActivity extends AppCompatActivity
         TacoRecyclerAdapter adapter = new TacoRecyclerAdapter(getApplicationContext(),
                 app.getTacoListReference());
         rvTacos.setAdapter(adapter);
+    }
+
+    private void setProfileInformation() {
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //Drawer header values: picture, name, email
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView txtName = (TextView) headerLayout.findViewById(R.id.txtName);
+        TextView txtEmail = (TextView) headerLayout.findViewById(R.id.txtEmail);
+        ImageView imgAvatar = (ImageView) headerLayout.findViewById(R.id.imgAvatar);
+
+        String strWelcome = String.format(getString(R.string.greeting_message), app.getName());
+        txtName.setText(strWelcome);
+
+        String email = app.getEmail();
+        if (!email.isEmpty()) {
+            txtEmail.setText(app.getEmail());
+        } else {
+            txtEmail.setVisibility(View.GONE);
+        }
+
+        Uri photoUrl = app.getPhotoUrl();
+        if (photoUrl != null) {
+            Glide.with(this)
+                    .load(photoUrl)
+                    .into(imgAvatar);
+        }
+
     }
 
     @Override
