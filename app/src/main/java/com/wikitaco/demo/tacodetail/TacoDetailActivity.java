@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.storage.StorageReference;
 import com.wikitaco.demo.App;
 import com.wikitaco.demo.R;
@@ -51,9 +52,17 @@ public class TacoDetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(name);
 
         TextView txtDescription = (TextView) findViewById(R.id.txtDescription);
+        if (description == null) {
+            description = "";
+            FirebaseCrash.log("No description available for " + id);
+        }
         txtDescription.setText(description);
 
         RatingBar rbTacoRating = (RatingBar) findViewById(R.id.rbTacoRating);
+        if (rating == 0.0f) {
+            rating = 0;
+            FirebaseCrash.log("No rating available for " + id);
+        }
         rbTacoRating.setRating(rating);
 
 
