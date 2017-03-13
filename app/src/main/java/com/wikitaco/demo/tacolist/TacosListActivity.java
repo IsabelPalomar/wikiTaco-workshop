@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -27,9 +28,12 @@ import com.google.android.gms.tasks.Task;
 import com.wikitaco.demo.App;
 import com.wikitaco.demo.R;
 import com.wikitaco.demo.login.LoginActivity;
+import com.wikitaco.demo.models.Taco;
+import com.wikitaco.demo.tacodetail.TacoDetailActivity;
 
 public class TacosListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        OnItemClickListener  {
 
     private App app;
     private RecyclerView rvTacos;
@@ -72,7 +76,7 @@ public class TacosListActivity extends AppCompatActivity
         rvTacos.setLayoutManager(app.getLayoutManager());
 
         TacoRecyclerAdapter adapter = new TacoRecyclerAdapter(getApplicationContext(),
-                app.getTacoListReference());
+                app.getTacoListReference(), this);
         rvTacos.setAdapter(adapter);
     }
 
@@ -108,12 +112,19 @@ public class TacosListActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        supportFinishAfterTransition();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        supportFinishAfterTransition();
     }
 
     @Override
@@ -164,5 +175,18 @@ public class TacosListActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onItemClick(Taco taco) {
+        Intent intent = new Intent(this, TacoDetailActivity.class);
+        intent.putExtra(TacoDetailActivity.TACO_ID_KEY, taco.getId());
+        intent.putExtra(TacoDetailActivity.TACO_NAME_KEY, taco.getName());
+        intent.putExtra(TacoDetailActivity.TACO_DESCRIPTION_KEY, taco.getDescription());
+        intent.putExtra(TacoDetailActivity.TACO_RATING_KEY, taco.getRating());
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, (View) findViewById(R.id.ivTacoImg), "tacoImg");
+        startActivity(intent, options.toBundle());
     }
 }

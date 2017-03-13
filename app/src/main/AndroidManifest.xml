@@ -40,6 +40,15 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
+        <activity
+            android:name=".tacodetail.TacoDetailActivity"
+            android:label="@string/title_activity_taco_detail"
+            android:parentActivityName=".tacolist.TacosListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wikitaco.demo.tacolist.TacosListActivity" />
+        </activity>
     </application>
 
 </manifest>

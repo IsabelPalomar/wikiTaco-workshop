@@ -21,17 +21,21 @@ public class TacoRecyclerAdapter extends FirebaseRecyclerAdapter <Taco, TacoRecy
 
     private Context context;
     private final static int layoutId = R.layout.item_taco;
+    private OnItemClickListener clickListener;
 
 
-    public TacoRecyclerAdapter(Context context, DatabaseReference databaseReference) {
+    public TacoRecyclerAdapter(Context context, DatabaseReference databaseReference, OnItemClickListener clickListener) {
         super(Taco.class, layoutId, TacoViewHolder.class, databaseReference);
         this.context = context;
+        this.clickListener = clickListener;
     }
 
     @Override
     protected void populateViewHolder(TacoViewHolder viewHolder, Taco model, int position) {
         viewHolder.tvTacoName.setText(model.getName());
         viewHolder.rbTacoRating.setRating(model.getRating());
+        viewHolder.setClickListener(model, this.clickListener);
+
 
         if (model.getId() == null) {
             model.setId(getRef(position).getKey());
@@ -62,6 +66,15 @@ public class TacoRecyclerAdapter extends FirebaseRecyclerAdapter <Taco, TacoRecy
             ivTacoImg = (ImageView) v.findViewById(R.id.ivTacoImg);
             rbTacoRating = (RatingBar) v.findViewById(R.id.rbTacoRating);
             this.view = v;
+        }
+
+        public void setClickListener(final Taco taco, final OnItemClickListener clickListener) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickListener.onItemClick(taco);
+                }
+            });
         }
 
     }
